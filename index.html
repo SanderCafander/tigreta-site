@@ -20,6 +20,17 @@
       --scale: 1.05;
       font-size: calc(16px * var(--scale));
     }
+
+    /* +++ Dark mode variables */
+    [data-theme="dark"]{
+      --bg:#0b0b0f;
+      --text:#f5f7fb;
+      --muted: rgba(245,247,251,.72);
+      --line: rgba(255,255,255,.12);
+      --card: rgba(255,255,255,.06);
+      --shadow: 0 14px 46px rgba(0,0,0,.45);
+    }
+
     *{box-sizing:border-box}
     body{
       margin:0;
@@ -27,15 +38,22 @@
       color:var(--text);
       background:var(--bg);
       line-height:1.5;
+      transition: background-color .35s ease, color .35s ease;
     }
     a{color:inherit; text-decoration:none}
     .wrap{max-width:var(--max); margin:0 auto; padding:0 22px;}
+
     .topbar{
       position:sticky; top:0; z-index:50;
       backdrop-filter:saturate(160%) blur(10px);
       background:rgba(255,255,255,.78);
       border-bottom:1px solid var(--line);
+      transition: background-color .35s ease, border-color .35s ease;
     }
+    [data-theme="dark"] .topbar{
+      background: rgba(11,15,10,.62);
+    }
+
     .topbar-inner{
       display:flex; align-items:center; justify-content:space-between;
       height:64px;
@@ -49,9 +67,12 @@
       border:1px solid var(--line);
       display:grid; place-items:center;
       font-weight:800;
+      transition: border-color .35s ease, background-color .35s ease;
     }
+
     nav{display:flex; gap:18px; color:var(--muted); font-weight:600; font-size:14px;}
     nav a:hover{color:var(--text)}
+
     .btn{
       display:inline-flex; align-items:center; justify-content:center;
       padding:11px 14px; border-radius:14px;
@@ -59,18 +80,112 @@
       background:#fff;
       font-weight:700; font-size:14px;
       box-shadow: 0 2px 10px rgba(0,0,0,.04);
-      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease, background-color .35s ease, color .35s ease;
     }
     .btn:hover{
       transform:translateY(-1px);
-      box-shadow: 0 8px 22px rgba(0,0,0,.08); /* +++ slightly nicer */
-      border-color: rgba(17,24,39,.16);        /* +++ */
+      box-shadow: 0 8px 22px rgba(0,0,0,.08);
+      border-color: rgba(17,24,39,.16);
     }
     .btn-primary{
       background:var(--text);
       color:#fff;
       border-color:var(--text);
     }
+
+    /* +++ Make buttons read well in dark mode */
+    [data-theme="dark"] .btn{
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      border-color: var(--line);
+      box-shadow: 0 10px 28px rgba(0,0,0,.35);
+    }
+    [data-theme="dark"] .btn-primary{
+      background: #ffffff;
+      color: #0b0b0f;
+      border-color: rgba(255,255,255,.75);
+    }
+
+    /* +++ Right-side actions container (Contact + toggle) */
+    .topbar-actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    /* +++ iOS-style theme toggle */
+    .theme-toggle{
+      width:56px;
+      height:32px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background: rgba(0,0,0,.05);
+      position:relative;
+      padding:0;
+      cursor:pointer;
+      box-shadow: 0 2px 10px rgba(0,0,0,.04);
+      transition: background-color .35s ease, border-color .35s ease, box-shadow .35s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    [data-theme="dark"] .theme-toggle{
+      background: rgba(255,255,255,.10);
+      box-shadow: 0 10px 28px rgba(0,0,0,.35);
+    }
+    .theme-toggle:focus-visible{
+      outline: 3px solid rgba(59,130,246,.35);
+      outline-offset: 3px;
+    }
+
+    /* Track "shine" */
+    .theme-toggle::before{
+      content:"";
+      position:absolute; inset:0;
+      border-radius:999px;
+      background: linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0));
+      opacity:.55;
+      pointer-events:none;
+      transition: opacity .35s ease;
+    }
+    [data-theme="dark"] .theme-toggle::before{ opacity:.22; }
+
+    /* Knob */
+    .theme-knob{
+      position:absolute;
+      top:2px; left:2px;
+      width:28px; height:28px;
+      border-radius:999px;
+      background: #fff;
+      border:1px solid rgba(0,0,0,.08);
+      display:grid;
+      place-items:center;
+      box-shadow: 0 10px 18px rgba(0,0,0,.18);
+      transition:
+        transform .45s cubic-bezier(.2, .9, .2, 1.1),
+        background-color .35s ease,
+        border-color .35s ease,
+        box-shadow .35s ease;
+      will-change: transform;
+      overflow:hidden;
+    }
+    [data-theme="dark"] .theme-knob{
+      transform: translateX(24px);
+      background: rgba(255,255,255,.92);
+      border-color: rgba(255,255,255,.18);
+      box-shadow: 0 16px 28px rgba(0,0,0,.55);
+    }
+
+    /* Icon swap (sun/moon) inside knob */
+    .theme-icon{
+      width:16px;
+      height:16px;
+      display:block;
+      transition: opacity .25s ease, transform .45s cubic-bezier(.2, .9, .2, 1.1);
+    }
+    .icon-sun{ opacity:1; transform: rotate(0deg) scale(1); }
+    .icon-moon{ opacity:0; transform: rotate(-25deg) scale(.9); position:absolute; }
+
+    [data-theme="dark"] .icon-sun{ opacity:0; transform: rotate(25deg) scale(.9); }
+    [data-theme="dark"] .icon-moon{ opacity:1; transform: rotate(0deg) scale(1); }
 
     /* HERO */
     .hero{
@@ -115,17 +230,27 @@
       border-radius:999px;
       padding:9px 12px;
       background:#fff;
+      transition: background-color .35s ease, color .35s ease, border-color .35s ease;
+    }
+    [data-theme="dark"] .pill{
+      background: rgba(255,255,255,.06);
+      color: var(--text);
     }
 
     .panel{
       border:1px solid var(--line);
-      border-radius: calc(var(--radius) + 2px); /* +++ */
+      border-radius: calc(var(--radius) + 2px);
       background:linear-gradient(180deg, #fff, #fafafa);
-      box-shadow: 0 12px 36px rgba(0,0,0,.10); /* +++ */
-      padding:24px;                             /* +++ */
+      box-shadow: 0 12px 36px rgba(0,0,0,.10);
+      padding:24px;
       overflow:hidden;
       position:relative;
+      transition: background .35s ease, border-color .35s ease, box-shadow .35s ease;
     }
+    [data-theme="dark"] .panel{
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.05));
+    }
+
     .panel::before{
       content:"";
       position:absolute; inset:-1px;
@@ -133,7 +258,10 @@
         radial-gradient(800px 240px at 30% -20%, rgba(0,0,0,.08), transparent 50%),
         radial-gradient(520px 220px at 100% 0%, rgba(0,0,0,.06), transparent 50%);
       pointer-events:none;
+      transition: opacity .35s ease;
     }
+    [data-theme="dark"] .panel::before{ opacity:.35; }
+
     .panel > *{position:relative}
     .panel h2{
       margin:0 0 8px;
@@ -153,11 +281,17 @@
     }
     .mini-item{
       border:1px solid var(--line);
-      border-radius:16px; /* +++ */
-      padding:15px;       /* +++ */
+      border-radius:16px;
+      padding:15px;
       background:#fff;
-      box-shadow: 0 8px 22px rgba(0,0,0,.06); /* +++ */
+      box-shadow: 0 8px 22px rgba(0,0,0,.06);
+      transition: background-color .35s ease, border-color .35s ease, box-shadow .35s ease;
     }
+    [data-theme="dark"] .mini-item{
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 12px 30px rgba(0,0,0,.35);
+    }
+
     .mini-item b{display:block; font-size:14px; margin-bottom:4px;}
     .mini-item span{color:var(--muted); font-size:13.5px;}
 
@@ -175,6 +309,7 @@
         radial-gradient(900px 400px at 20% 0%, rgba(255,255,255,.18), transparent 55%),
         linear-gradient(120deg, #111827, #0b0b0f);
       color:#fff;
+      transition: border-color .35s ease;
     }
     .banner-inner{
       padding:56px 0;
@@ -203,6 +338,7 @@
       padding-bottom:14px;
       border-bottom:1px solid var(--line);
       margin-bottom:18px;
+      transition: border-color .35s ease;
     }
     .section-title h3{
       margin:0;
@@ -224,16 +360,25 @@
     .card{
       background:var(--card);
       border:1px solid var(--line);
-      border-radius: calc(var(--radius) + 2px); /* +++ */
-      padding:20px;                              /* +++ */
-      box-shadow: 0 10px 28px rgba(0,0,0,.08);    /* +++ */
-      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+      border-radius: calc(var(--radius) + 2px);
+      padding:20px;
+      box-shadow: 0 10px 28px rgba(0,0,0,.08);
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background-color .35s ease;
     }
     .card:hover{
-      transform: translateY(-2px);               /* +++ subtle */
-      box-shadow: 0 16px 42px rgba(0,0,0,.12);   /* +++ */
-      border-color: rgba(17,24,39,.14);          /* +++ */
+      transform: translateY(-2px);
+      box-shadow: 0 16px 42px rgba(0,0,0,.12);
+      border-color: rgba(17,24,39,.14);
     }
+    [data-theme="dark"] .card{
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 14px 36px rgba(0,0,0,.35);
+    }
+    [data-theme="dark"] .card:hover{
+      box-shadow: 0 20px 52px rgba(0,0,0,.55);
+      border-color: rgba(255,255,255,.18);
+    }
+
     .card b{
       display:block;
       font-size:14px;
@@ -252,11 +397,17 @@
     }
     .step{
       border:1px solid var(--line);
-      border-radius: calc(var(--radius) + 2px); /* +++ */
-      padding:20px;                              /* +++ */
+      border-radius: calc(var(--radius) + 2px);
+      padding:20px;
       background:#fff;
-      box-shadow: 0 10px 28px rgba(0,0,0,.07);   /* +++ */
+      box-shadow: 0 10px 28px rgba(0,0,0,.07);
+      transition: background-color .35s ease, border-color .35s ease, box-shadow .35s ease;
     }
+    [data-theme="dark"] .step{
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 14px 36px rgba(0,0,0,.35);
+    }
+
     .num{
       width:34px; height:34px;
       border-radius:12px;
@@ -264,7 +415,12 @@
       border:1px solid var(--line);
       font-weight:800;
       margin-bottom:10px;
+      transition: border-color .35s ease, background-color .35s ease, color .35s ease;
     }
+    [data-theme="dark"] .num{
+      background: rgba(255,255,255,.06);
+    }
+
     .step b{display:block; margin-bottom:6px;}
     .step p{margin:0; color:var(--muted); font-size:14px;}
 
@@ -273,18 +429,24 @@
     }
     .cta-box{
       border:1px solid var(--line);
-      border-radius:26px; /* +++ */
+      border-radius:26px;
       background:
         radial-gradient(800px 300px at 20% 0%, rgba(0,0,0,.06), transparent 55%),
         linear-gradient(180deg, #fff, #fafafa);
-      padding:24px;                               /* +++ */
-      box-shadow: 0 14px 46px rgba(0,0,0,.10);     /* +++ */
+      padding:24px;
+      box-shadow: 0 14px 46px rgba(0,0,0,.10);
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:18px;
       flex-wrap:wrap;
+      transition: background .35s ease, border-color .35s ease, box-shadow .35s ease;
     }
+    [data-theme="dark"] .cta-box{
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.05));
+      box-shadow: 0 18px 58px rgba(0,0,0,.55);
+    }
+
     .cta-box h3{margin:0; font-size:18px;}
     .cta-box p{margin:6px 0 0; color:var(--muted); font-size:14px;}
     footer{
@@ -292,6 +454,7 @@
       border-top:1px solid var(--line);
       color:var(--muted);
       font-size:13px;
+      transition: border-color .35s ease;
     }
 
     /* Responsive */
@@ -354,7 +517,7 @@
     #fee .banner-inner{
       position:relative;
       z-index:2;
-      padding: 88px 0; /* bigger */
+      padding: 88px 0;
     }
 
     #process .banner-inner h2,
@@ -382,7 +545,31 @@
         <a href="#contact">Contact</a>
       </nav>
 
-      <a class="btn btn-primary" href="#contact">Contact</a>
+      <!-- ONLY CHANGE IN HTML: wrap right-side controls and add theme toggle next to Contact -->
+      <div class="topbar-actions">
+        <a class="btn btn-primary" href="#contact">Contact</a>
+
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode" aria-pressed="false">
+          <span class="theme-knob" aria-hidden="true">
+            <!-- Sun -->
+            <svg class="theme-icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2"></path>
+              <path d="M12 20v2"></path>
+              <path d="M4.93 4.93l1.41 1.41"></path>
+              <path d="M17.66 17.66l1.41 1.41"></path>
+              <path d="M2 12h2"></path>
+              <path d="M20 12h2"></path>
+              <path d="M4.93 19.07l1.41-1.41"></path>
+              <path d="M17.66 6.34l1.41-1.41"></path>
+            </svg>
+            <!-- Moon -->
+            <svg class="theme-icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -568,7 +755,38 @@
     window.addEventListener('scroll', onScroll, { passive:true });
     window.addEventListener('resize', onScroll);
     updateParallax();
+
+    // ---- Theme toggle (Light/Dark) with persistence ----
+    const root = document.documentElement;
+    const toggleBtn = document.getElementById('themeToggle');
+
+    function setTheme(next){
+      if(next === 'dark'){
+        root.setAttribute('data-theme','dark');
+        toggleBtn.setAttribute('aria-pressed','true');
+      }else{
+        root.removeAttribute('data-theme');
+        toggleBtn.setAttribute('aria-pressed','false');
+      }
+      try{ localStorage.setItem('theme', next); }catch(e){}
+    }
+
+    // Initial theme: saved -> else system
+    (function initTheme(){
+      let saved = null;
+      try{ saved = localStorage.getItem('theme'); }catch(e){}
+      if(saved === 'dark' || saved === 'light'){
+        setTheme(saved);
+        return;
+      }
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(prefersDark ? 'dark' : 'light');
+    })();
+
+    toggleBtn.addEventListener('click', ()=>{
+      const isDark = root.getAttribute('data-theme') === 'dark';
+      setTheme(isDark ? 'light' : 'dark');
+    });
   </script>
 </body>
 </html>
-
