@@ -1,463 +1,259 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tigretta Services — Unclaimed Property Recovery</title>
-  <meta name="description" content="We help businesses recover unclaimed property held by the State. No recovery, no fee." />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tigretta — Parallax Split</title>
+
   <style>
     :root{
-      --bg:#ffffff;
-      --text:#0b0b0f;
-      --muted:#4b5563;
-      --line:#e5e7eb;
-      --card:#ffffff;
-      --shadow: 0 10px 30px rgba(0,0,0,.08);
+      --bg: #fbfbf8;
+      --ink: #0b0b0b;
+      --muted: rgba(0,0,0,.70);
+      --rule: rgba(0,0,0,.10);
+      --panel: rgba(251,251,248,.92);
+      --max: 1200px;
+      --pad: clamp(18px, 3vw, 40px);
+      --h1: clamp(38px, 5.5vw, 86px);
+      --h2: clamp(22px, 2.8vw, 44px);
+      --p:  clamp(16px, 1.25vw, 18px);
+      --leading: 1.55;
       --radius: 18px;
-      --max: 1100px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     }
-    *{box-sizing:border-box}
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Helvetica Neue", Helvetica, "Apple Color Emoji","Segoe UI Emoji";
-      color:var(--text);
-      background:var(--bg);
-      line-height:1.5;
-    }
-    a{color:inherit; text-decoration:none}
-    .wrap{max-width:var(--max); margin:0 auto; padding:0 22px;}
-    .topbar{
-      position:sticky; top:0; z-index:50;
-      backdrop-filter:saturate(160%) blur(10px);
-      background:rgba(255,255,255,.78);
-      border-bottom:1px solid var(--line);
-    }
-    .topbar-inner{
-      display:flex; align-items:center; justify-content:space-between;
-      height:64px;
-    }
-    .brand{
-      display:flex; align-items:center; gap:12px;
-      font-weight:700; letter-spacing:.2px;
-    }
-    .logo{
-      width:34px; height:34px; border-radius:12px;
-      border:1px solid var(--line);
-      display:grid; place-items:center;
-      font-weight:800;
-    }
-    nav{display:flex; gap:18px; color:var(--muted); font-weight:600; font-size:14px;}
-    nav a:hover{color:var(--text)}
-    .btn{
-      display:inline-flex; align-items:center; justify-content:center;
-      padding:11px 14px; border-radius:14px;
-      border:1px solid var(--line);
-      background:#fff;
-      font-weight:700; font-size:14px;
-      box-shadow: 0 2px 10px rgba(0,0,0,.04);
-    }
-    .btn:hover{transform:translateY(-1px)}
-    .btn-primary{
-      background:var(--text);
-      color:#fff;
-      border-color:var(--text);
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--ink);
     }
 
-    /* HERO */
-    .hero{
-      padding:62px 0 28px;
+    /* --- Demo spacing sections --- */
+    .spacer{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 70px var(--pad);
+      border-bottom: 1px solid var(--rule);
     }
-    .hero-grid{
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap:42px;
-      align-items:start;
+    .spacer h2{
+      margin:0 0 12px;
+      font-size: var(--h2);
+      font-weight: 900;
+      letter-spacing: -0.8px;
+      line-height: 1.05;
     }
-    .kicker{
-      color:var(--muted);
-      font-weight:700;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      font-size:12px;
-    }
-    h1{
-      margin:10px 0 14px;
-      font-size: clamp(34px, 4.2vw, 54px);
-      line-height:1.05;
-      letter-spacing:-.02em;
-    }
-    .lead{
-      color:var(--muted);
-      font-size:18px;
-      max-width:52ch;
-    }
-    .hero-actions{
-      margin-top:18px;
-      display:flex; gap:12px; flex-wrap:wrap;
-    }
-    .pill-row{
-      margin-top:22px;
-      display:flex; gap:10px; flex-wrap:wrap;
-    }
-    .pill{
-      font-size:13px;
-      color:#111827;
-      border:1px solid var(--line);
-      border-radius:999px;
-      padding:9px 12px;
-      background:#fff;
+    .spacer p{
+      margin:0;
+      font-size: var(--p);
+      line-height: var(--leading);
+      color: var(--muted);
+      max-width: 70ch;
     }
 
-    .panel{
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      background:linear-gradient(180deg, #fff, #fafafa);
-      box-shadow: var(--shadow);
-      padding:22px;
+    /* --- SPLIT PARALLAX HERO --- */
+    .split-hero{
+      position: relative;
+      min-height: 85vh;
+      border-bottom: 1px solid var(--rule);
+      overflow: hidden;
+      background: #000; /* behind image edges */
+    }
+
+    /* left side image area */
+    .split-hero__imageWrap{
+      position:absolute;
+      inset:0;
+      width: 50%;
       overflow:hidden;
-      position:relative;
     }
-    .panel::before{
+
+    /* the actual image layer that moves */
+    .split-hero__image{
+      position:absolute;
+      inset:-12% -12% -12% -12%;
+      background-image: url("bg.png"); /* <--- cambia esto si tu imagen se llama diferente */
+      background-size: cover;
+      background-position: center;
+      filter: grayscale(1) contrast(1.05) brightness(1.05);
+      transform: translate3d(0, var(--parallaxY, 0px), 0) scale(1.08);
+      will-change: transform;
+    }
+
+    /* subtle overlay for readability */
+    .split-hero__image::after{
       content:"";
-      position:absolute; inset:-1px;
-      background:
-        radial-gradient(800px 240px at 30% -20%, rgba(0,0,0,.08), transparent 50%),
-        radial-gradient(520px 220px at 100% 0%, rgba(0,0,0,.06), transparent 50%);
-      pointer-events:none;
-    }
-    .panel > *{position:relative}
-    .panel h2{
-      margin:0 0 8px;
-      font-size:18px;
-      letter-spacing:-.01em;
-    }
-    .panel p{
-      margin:0;
-      color:var(--muted);
-      font-size:14.5px;
-    }
-    .mini{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:14px;
-      margin-top:16px;
-    }
-    .mini-item{
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:14px;
-      background:#fff;
-    }
-    .mini-item b{display:block; font-size:14px; margin-bottom:4px;}
-    .mini-item span{color:var(--muted); font-size:13.5px;}
-
-    /* BANNER sections (photo-like) */
-    .banner{
-      margin-top:34px;
-      border-top:1px solid var(--line);
-      border-bottom:1px solid var(--line);
-      background:
-        linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,.45)),
-        radial-gradient(900px 400px at 20% 0%, rgba(255,255,255,.18), transparent 55%),
-        linear-gradient(120deg, #111827, #0b0b0f);
-      color:#fff;
-    }
-    .banner-inner{
-      padding:56px 0;
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:24px;
-    }
-    .banner h2{
-      margin:0;
-      font-size: clamp(34px, 4vw, 58px);
-      line-height:1;
-      letter-spacing:-.02em;
-    }
-    .banner .sub{
-      max-width:60ch;
-      color:rgba(255,255,255,.78);
-      font-size:15.5px;
-      margin-top:10px;
+      position:absolute; inset:0;
+      background: linear-gradient(to right, rgba(0,0,0,.10), rgba(0,0,0,.35));
     }
 
-    /* SECTION */
-    section{padding:42px 0;}
-    .section-title{
-      display:flex; align-items:flex-end; justify-content:space-between; gap:18px;
-      padding-bottom:14px;
-      border-bottom:1px solid var(--line);
-      margin-bottom:18px;
-    }
-    .section-title h3{
-      margin:0;
-      font-size:20px;
-      letter-spacing:-.01em;
-    }
-    .section-title p{
-      margin:0;
-      color:var(--muted);
-      font-size:14px;
-      max-width:60ch;
-    }
-
-    .cards{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap:16px;
-    }
-    .card{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      padding:18px;
-      box-shadow: 0 6px 18px rgba(0,0,0,.05);
-    }
-    .card b{
-      display:block;
-      font-size:14px;
-      margin-bottom:8px;
-    }
-    .card p{
-      margin:0;
-      color:var(--muted);
-      font-size:14px;
-    }
-    .steps{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:16px;
-      margin-top:18px;
-    }
-    .step{
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      padding:18px;
-      background:#fff;
-    }
-    .num{
-      width:34px; height:34px;
-      border-radius:12px;
-      display:grid; place-items:center;
-      border:1px solid var(--line);
-      font-weight:800;
-      margin-bottom:10px;
-    }
-    .step b{display:block; margin-bottom:6px;}
-    .step p{margin:0; color:var(--muted); font-size:14px;}
-
-    .cta{
-      padding:38px 0 64px;
-    }
-    .cta-box{
-      border:1px solid var(--line);
-      border-radius:24px;
-      background:
-        radial-gradient(800px 300px at 20% 0%, rgba(0,0,0,.06), transparent 55%),
-        linear-gradient(180deg, #fff, #fafafa);
-      padding:22px;
-      box-shadow: var(--shadow);
+    /* right side text "bar/panel" */
+    .split-hero__panel{
+      position: relative;
+      margin-left: 50%;
+      min-height: 85vh;
       display:flex;
       align-items:center;
-      justify-content:space-between;
-      gap:18px;
-      flex-wrap:wrap;
-    }
-    .cta-box h3{margin:0; font-size:18px;}
-    .cta-box p{margin:6px 0 0; color:var(--muted); font-size:14px;}
-    footer{
-      padding:24px 0 42px;
-      border-top:1px solid var(--line);
-      color:var(--muted);
-      font-size:13px;
+      padding: clamp(30px, 5vw, 70px) var(--pad);
+      background: var(--panel);
+      backdrop-filter: blur(10px);
     }
 
-    /* Responsive */
+    /* center divider line like the video */
+    .split-hero__divider{
+      position:absolute;
+      left: 50%;
+      top:0;
+      bottom:0;
+      width:1px;
+      background: var(--rule);
+      transform: translateX(-50%);
+      pointer-events:none;
+    }
+
+    .split-hero__content{
+      max-width: 56ch;
+    }
+
+    .kicker{
+      font-size: 13px;
+      letter-spacing: .22em;
+      font-weight: 800;
+      opacity: .75;
+      margin: 0 0 14px;
+    }
+
+    .title{
+      margin:0;
+      font-size: var(--h1);
+      font-weight: 950;
+      letter-spacing: -1.2px;
+      line-height: 1.02;
+    }
+
+    .desc{
+      margin: 18px 0 0;
+      font-size: var(--p);
+      line-height: var(--leading);
+      color: var(--muted);
+    }
+
+    /* optional button */
+    .btnRow{ margin-top: 24px; display:flex; gap:12px; flex-wrap:wrap; }
+    .btn{
+      appearance:none;
+      border:1px solid rgba(0,0,0,.18);
+      background: #fff;
+      color: var(--ink);
+      padding: 12px 14px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 14px;
+      cursor:pointer;
+    }
+    .btn:hover{ border-color: rgba(0,0,0,.35); }
+
+    /* Mobile: stack */
     @media (max-width: 900px){
-      .hero-grid{grid-template-columns:1fr; gap:18px;}
-      .cards{grid-template-columns:1fr;}
-      .steps{grid-template-columns:1fr;}
-      nav{display:none;}
-      .banner-inner{flex-direction:column; align-items:flex-start;}
+      .split-hero{ min-height: 92vh; }
+      .split-hero__imageWrap{
+        width: 100%;
+        height: 46vh;
+        position: relative;
+      }
+      .split-hero__panel{
+        margin-left: 0;
+        min-height: auto;
+        padding: 26px var(--pad) 44px;
+      }
+      .split-hero__divider{ display:none; }
     }
   </style>
 </head>
 
 <body>
-  <div class="topbar">
-    <div class="wrap topbar-inner">
-      <div class="brand">
-        <div class="logo">T</div>
-        <div>
-          Tigretta Services
-          <div style="font-size:12px; color:var(--muted); font-weight:600;">Unclaimed Property Recovery</div>
-        </div>
-      </div>
+  <section class="spacer">
+    <h2>Scroll down</h2>
+    <p>Este bloque es solo para que notes el efecto. Cuando llegas al “split hero”, el fondo se mueve suave mientras bajas.</p>
+  </section>
 
-      <nav>
-        <a href="#what">What it is</a>
-        <a href="#process">Process</a>
-        <a href="#fee">Fees</a>
-        <a href="#contact">Contact</a>
-      </nav>
+  <!-- PARALLAX SPLIT SECTION -->
+  <section class="split-hero" id="parallax">
+    <div class="split-hero__divider"></div>
 
-      <a class="btn btn-primary" href="#contact">Contact</a>
-    </div>
-  </div>
-
-  <main>
-    <div class="wrap hero">
-      <div class="hero-grid">
-        <div>
-          <div class="kicker">For businesses</div>
-          <h1>We help businesses recover unclaimed funds held by the State.</h1>
-          <p class="lead">
-            Unclaimed property often comes from lost checks, vendor credits, utility deposits, insurance refunds,
-            and accounting transitions. Many companies never realize the money exists.
-          </p>
-
-          <div class="hero-actions">
-            <a class="btn btn-primary" href="#contact">Request a quick review</a>
-            <a class="btn" href="#process">See the process</a>
-          </div>
-
-          <div class="pill-row">
-            <div class="pill">Fast initial screening</div>
-            <div class="pill">Business-focused claims</div>
-            <div class="pill">Clear, simple steps</div>
-            <div class="pill">No recovery — no fee</div>
-          </div>
-        </div>
-
-        <aside class="panel" id="what">
-          <h2>What is Unclaimed Property?</h2>
-          <p>
-            States hold funds when owners can’t be reached or payments aren’t deposited.
-            Companies often miss these because mail, vendors, or records changed over time.
-          </p>
-
-          <div class="mini">
-            <div class="mini-item">
-              <b>Common sources</b>
-              <span>Vendor credits, refunds, deposits, checks, account balances.</span>
-            </div>
-            <div class="mini-item">
-              <b>Why it happens</b>
-              <span>Address changes, mergers, payroll/vendor updates, accounting transitions.</span>
-            </div>
-            <div class="mini-item">
-              <b>What we do</b>
-              <span>Identify likely matches and guide the recovery steps with documentation.</span>
-            </div>
-          </div>
-        </aside>
-      </div>
+    <!-- Left half: moving background -->
+    <div class="split-hero__imageWrap" aria-hidden="true">
+      <div class="split-hero__image" id="parallaxLayer"></div>
     </div>
 
-    <div class="banner" id="process">
-      <div class="wrap banner-inner">
-        <div>
-          <h2>How Our Process Works</h2>
-          <div class="sub">Simple, documented, and designed to reduce your time spent on recovery.</div>
+    <!-- Right half: text bar / panel -->
+    <div class="split-hero__panel">
+      <div class="split-hero__content">
+        <p class="kicker">TIGRETTA SERVICES</p>
+        <h1 class="title">No Recovery<br/>No Fee</h1>
+        <p class="desc">
+          Identificamos fondos no reclamados a nombre de tu negocio y manejamos el proceso completo con el Estado.
+          Si no se recupera dinero, no pagas.
+        </p>
+
+        <div class="btnRow">
+          <button class="btn" type="button">Learn More</button>
+          <button class="btn" type="button">Contact</button>
         </div>
       </div>
     </div>
+  </section>
 
-    <section class="wrap">
-      <div class="section-title">
-        <h3>Our Process</h3>
-        <p>We start with a quick identification pass, then support the claim steps with the right paperwork.</p>
-      </div>
-
-      <div class="cards">
-        <div class="card">
-          <b>1) Identify funds under your business name</b>
-          <p>We look for listings that match your business or prior names, addresses, and related records.</p>
-        </div>
-        <div class="card">
-          <b>2) Verify and prepare documentation</b>
-          <p>We outline the documents typically needed to prove ownership and complete the claim.</p>
-        </div>
-        <div class="card">
-          <b>3) Submit and track</b>
-          <p>We help you follow through so the claim doesn’t stall due to missing details.</p>
-        </div>
-      </div>
-
-      <div class="steps">
-        <div class="step">
-          <div class="num">A</div>
-          <b>Clean communication</b>
-          <p>Professional outreach, clear next steps, no fluff.</p>
-        </div>
-        <div class="step">
-          <div class="num">B</div>
-          <b>Business-friendly</b>
-          <p>Focused on entities, corporate records, and practical documentation paths.</p>
-        </div>
-      </div>
-    </section>
-
-    <div class="banner" id="fee"
-      style="
-        background:
-          linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,.45)),
-          radial-gradient(900px 420px at 80% 0%, rgba(255,255,255,.14), transparent 55%),
-          linear-gradient(120deg, #0b0b0f, #111827);
-      ">
-      <div class="wrap banner-inner">
-        <div>
-          <h2>No Recovery — No Fee</h2>
-          <div class="sub">If there’s nothing to recover, you don’t pay for recovery services.</div>
-        </div>
-      </div>
-    </div>
-
-    <section class="wrap">
-      <div class="section-title">
-        <h3>Why businesses don’t know this money exists</h3>
-        <p>Most missed funds are the result of normal business changes — not wrongdoing.</p>
-      </div>
-
-      <div class="cards">
-        <div class="card">
-          <b>Mail and address changes</b>
-          <p>Checks and notices go to old addresses and never reach the right team.</p>
-        </div>
-        <div class="card">
-          <b>Vendor / processor transitions</b>
-          <p>Refunds, credits, and balances can be left behind during system changes.</p>
-        </div>
-        <div class="card">
-          <b>Mergers, DBAs, old entity names</b>
-          <p>Funds can be listed under prior names or legacy records.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="wrap cta" id="contact">
-      <div class="cta-box">
-        <div>
-          <h3>Contact</h3>
-          <p>Email: <b>yulio@tigretta.com</b> — include your business name + state(s) you want checked.</p>
-        </div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <a class="btn btn-primary" href="mailto:yulio@tigretta.com?subject=Unclaimed%20Property%20Inquiry">Email now</a>
-          <a class="btn" href="#process">Review process</a>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="wrap">
-      © <span id="y"></span> Tigretta Services. All rights reserved.
-    </div>
-  </footer>
+  <section class="spacer">
+    <h2>More content</h2>
+    <p>Otra sección abajo para que el parallax se sienta “real” mientras sigues bajando.</p>
+  </section>
 
   <script>
-    document.getElementById("y").textContent = new Date().getFullYear();
+    // Parallax suave solo cuando el elemento está cerca del viewport
+    const hero = document.getElementById("parallax");
+    const layer = document.getElementById("parallaxLayer");
+
+    // Ajusta estos valores para más/menos movimiento
+    const intensity = 0.22;   // 0.15–0.35 recomendado
+    const maxShift = 60;      // px
+
+    let ticking = false;
+
+    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
+
+    function update(){
+      ticking = false;
+
+      const r = hero.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+
+      // progreso aproximado de scroll dentro del hero
+      // cuando top = vh => 0, cuando bottom = 0 => 1
+      const progress = (vh - r.top) / (vh + r.height);
+      const p = clamp(progress, 0, 1);
+
+      // Curva suave (ease)
+      const eased = p * p * (3 - 2 * p); // smoothstep
+
+      // shift vertical
+      const shift = clamp((eased - 0.5) * 2 * maxShift * intensity, -maxShift, maxShift);
+
+      layer.style.setProperty("--parallaxY", `${shift}px`);
+    }
+
+    function onScroll(){
+      if(!ticking){
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    update();
   </script>
 </body>
 </html>
