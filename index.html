@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="es">
 <head>
@@ -20,7 +19,7 @@
       --p: clamp(15px, 1.2vw, 18px);
       --leading: 1.55;
 
-      --split: 52%; /* % de pantalla para la imagen (como tu code) */
+      --split: 52%;
     }
 
     *{ box-sizing:border-box; }
@@ -32,7 +31,7 @@
       color: var(--ink);
     }
 
-    /* ====== Page sections to allow scrolling like the video ====== */
+    /* ====== Sections (so you can scroll like the example video) ====== */
     .section{
       border-bottom: 1px solid var(--rule);
       background: var(--bg);
@@ -57,7 +56,7 @@
       color: var(--muted);
     }
 
-    /* ====== SPLIT HERO (the thing you want) ====== */
+    /* ====== SPLIT HERO ====== */
     .split-hero{
       position: relative;
       min-height: 92vh;
@@ -66,7 +65,7 @@
       border-bottom: 1px solid var(--rule);
     }
 
-    /* left half image area */
+    /* Left: image area */
     .split-hero__imageWrap{
       position:absolute;
       inset:0;
@@ -74,25 +73,34 @@
       overflow:hidden;
     }
 
-    /* Parallax layer: bigger than container so movement doesn't show edges */
+    /* The moving image layer (FIXED CALIBRATION) */
     .split-hero__image{
       position:absolute;
-      inset:-18% -18% -18% -18%;
+
+      /* FIX: no more huge inset. This makes movement visible and “cinematic”. */
+      top:-8%;
+      bottom:-8%;
+      left:-6%;
+      right:-6%;
+
       background-image: url("bg.png");
       background-size: cover;
       background-position: center;
-      filter: grayscale(1) contrast(1.06) brightness(1.06);
 
-      /* Real parallax */
-      transform: translate3d(0, var(--parallaxY, 0px), 0) scale(1.14);
+      /* keep it crisp but cinematic */
+      filter: grayscale(1) contrast(1.08) brightness(1.02);
+
+      /* FIX: lower scale so the parallax is noticeable */
+      transform: translate3d(0, var(--parallaxY, 0px), 0) scale(1.06);
       will-change: transform;
     }
 
-    /* Soft gradient like your example */
+    /* overlay gradient like your reference */
     .split-hero__image::after{
       content:"";
       position:absolute; inset:0;
-      background: linear-gradient(to right, rgba(0,0,0,.08), rgba(0,0,0,.55));
+      background: linear-gradient(to right, rgba(0,0,0,.10), rgba(0,0,0,.55));
+      pointer-events:none;
     }
 
     /* divider line */
@@ -107,7 +115,7 @@
       z-index: 5;
     }
 
-    /* right side text bar */
+    /* Right: text bar */
     .split-hero__panel{
       position: relative;
       margin-left: var(--split);
@@ -171,7 +179,7 @@
       background: rgba(255,255,255,.10);
     }
 
-    /* ====== Responsive like the video (stack) ====== */
+    /* Responsive */
     @media (max-width: 980px){
       :root{ --split: 100%; }
 
@@ -189,23 +197,28 @@
         min-height: auto;
         padding: 28px var(--pad) 48px;
       }
+
+      /* keep image movement safe on mobile */
+      .split-hero__image{
+        top:-10%;
+        bottom:-10%;
+        left:-8%;
+        right:-8%;
+        transform: translate3d(0, var(--parallaxY, 0px), 0) scale(1.05);
+      }
     }
   </style>
 </head>
 
 <body>
 
-  <!-- content above so the split feels like your video (you scroll into it) -->
   <section class="section">
     <div class="section__inner">
       <h2>Intro section</h2>
-      <p>
-        Baja y mira el efecto: el fondo (izquierda) se mueve suave mientras el texto queda limpio en la barra (derecha).
-      </p>
+      <p>Baja. Cuando entres al bloque, el fondo (izquierda) se mueve suave mientras el texto queda fijo (derecha).</p>
     </div>
   </section>
 
-  <!-- the split parallax section -->
   <section class="split-hero" id="parallax">
     <div class="split-hero__divider"></div>
 
@@ -216,7 +229,9 @@
     <div class="split-hero__panel">
       <div class="split-hero__content">
         <p class="kicker">TIGRETTA SERVICES</p>
+
         <h1 class="title">No<br/>Recovery<br/>No Fee</h1>
+
         <p class="desc">
           Identificamos fondos no reclamados a nombre de tu negocio y manejamos el proceso completo con el Estado.
           Si no se recupera dinero, no pagas.
@@ -230,25 +245,21 @@
     </div>
   </section>
 
-  <!-- more content below so you can see it continue -->
   <section class="section">
     <div class="section__inner">
       <h2>Next section</h2>
-      <p>
-        Esta parte es para que el parallax se sienta “real” porque sigues haciendo scroll después del bloque.
-      </p>
+      <p>Contenido extra para que el parallax se sienta natural, igual que en el ejemplo.</p>
     </div>
   </section>
 
   <script>
-    // Stronger, cleaner parallax: based on section progress
+    // Parallax “video-like”: noticeable but not crazy.
     const hero  = document.getElementById("parallax");
     const layer = document.getElementById("parallaxLayer");
 
-    // Tuning (video-like)
-    const maxShift = 90;     // px movement range
-    const ease = (t) => t*t*(3 - 2*t); // smoothstep
+    const maxShift = 110; // px (sube/baja más si quieres más efecto)
     const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
+    const ease = (t) => t*t*(3 - 2*t); // smoothstep
 
     let ticking = false;
 
@@ -258,7 +269,7 @@
       const r = hero.getBoundingClientRect();
       const vh = window.innerHeight || document.documentElement.clientHeight;
 
-      // progress 0..1 as the hero moves through viewport
+      // progress 0..1 through the viewport
       const progress = (vh - r.top) / (vh + r.height);
       const p = clamp(progress, 0, 1);
       const e = ease(p);
