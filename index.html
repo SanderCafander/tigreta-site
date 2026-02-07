@@ -1,28 +1,26 @@
+
 <!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tigretta — Parallax Split</title>
+  <title>Tigretta — Split Parallax</title>
 
   <style>
     :root{
       --bg: #0b0f0a;
-      --panel: rgba(11,15,10,.92);
+      --panel: rgba(11,15,10,.88);
       --ink: #ffffff;
-      --muted: rgba(255,255,255,.72);
+      --muted: rgba(255,255,255,.70);
       --rule: rgba(255,255,255,.12);
 
-      --max: 1200px;
       --pad: clamp(18px, 3vw, 44px);
-
       --h1: clamp(46px, 6.4vw, 96px);
       --kicker: 12px;
-      --p:  clamp(15px, 1.2vw, 18px);
+      --p: clamp(15px, 1.2vw, 18px);
       --leading: 1.55;
 
-      --radius: 18px;
-      --shadow: 0 18px 60px rgba(0,0,0,.35);
+      --split: 52%; /* % de pantalla para la imagen (como tu code) */
     }
 
     *{ box-sizing:border-box; }
@@ -30,110 +28,102 @@
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      background: #0b0f0a;
+      background: var(--bg);
       color: var(--ink);
     }
 
-    /* =========================================================
-       CARRD FIX: full-bleed section inside a constrained wrapper
-       This makes the block span the full viewport width.
-       ========================================================= */
-    .carrd-fullbleed{
-      width: 100vw;
-      margin-left: calc(50% - 50vw);
-      margin-right: calc(50% - 50vw);
-    }
-
-    /* Optional top spacer (delete if you don’t want it) */
-    .spacer{
-      background: #0b0f0a;
+    /* ====== Page sections to allow scrolling like the video ====== */
+    .section{
       border-bottom: 1px solid var(--rule);
+      background: var(--bg);
     }
-    .spacer__inner{
-      max-width: var(--max);
+    .section__inner{
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 62px var(--pad);
+      padding: clamp(56px, 7vw, 120px) var(--pad);
     }
-    .spacer h2{
-      margin:0 0 10px;
-      font-size: clamp(30px, 3.5vw, 52px);
+    .section h2{
+      margin:0 0 12px;
+      font-size: clamp(28px, 3.4vw, 56px);
       font-weight: 950;
-      letter-spacing: -0.8px;
+      letter-spacing: -0.9px;
       line-height: 1.05;
     }
-    .spacer p{
+    .section p{
       margin:0;
+      max-width: 72ch;
       font-size: var(--p);
       line-height: var(--leading);
       color: var(--muted);
-      max-width: 70ch;
     }
 
-    /* =======================
-       SPLIT PARALLAX HERO
-       ======================= */
+    /* ====== SPLIT HERO (the thing you want) ====== */
     .split-hero{
       position: relative;
-      min-height: 86vh;
-      background: #000;
+      min-height: 92vh;
       overflow: hidden;
+      background: #000;
       border-bottom: 1px solid var(--rule);
     }
 
-    /* left half: image area */
+    /* left half image area */
     .split-hero__imageWrap{
       position:absolute;
       inset:0;
-      width: 52%;
+      width: var(--split);
       overflow:hidden;
     }
 
-    /* the moving image layer */
+    /* Parallax layer: bigger than container so movement doesn't show edges */
     .split-hero__image{
       position:absolute;
-      inset:-14% -14% -14% -14%;
-      background-image: url("bg.png"); /* <-- Tu imagen */
+      inset:-18% -18% -18% -18%;
+      background-image: url("bg.png");
       background-size: cover;
       background-position: center;
       filter: grayscale(1) contrast(1.06) brightness(1.06);
-      transform: translate3d(0, var(--parallaxY, 0px), 0) scale(1.12);
+
+      /* Real parallax */
+      transform: translate3d(0, var(--parallaxY, 0px), 0) scale(1.14);
       will-change: transform;
     }
 
-    /* subtle overlay on image side */
+    /* Soft gradient like your example */
     .split-hero__image::after{
       content:"";
       position:absolute; inset:0;
-      background: linear-gradient(to right, rgba(0,0,0,.10), rgba(0,0,0,.55));
+      background: linear-gradient(to right, rgba(0,0,0,.08), rgba(0,0,0,.55));
     }
 
     /* divider line */
     .split-hero__divider{
       position:absolute;
-      left: 52%;
-      top:0;
-      bottom:0;
-      width:1px;
+      left: var(--split);
+      top:0; bottom:0;
+      width: 1px;
       background: var(--rule);
       transform: translateX(-50%);
       pointer-events:none;
+      z-index: 5;
     }
 
-    /* right half: text bar/panel */
+    /* right side text bar */
     .split-hero__panel{
       position: relative;
-      margin-left: 52%;
-      min-height: 86vh;
+      margin-left: var(--split);
+      min-height: 92vh;
+
       display:flex;
       align-items:center;
+
       background: var(--panel);
       backdrop-filter: blur(12px);
+
       padding: clamp(28px, 5vw, 78px) var(--pad);
+      z-index: 6;
     }
 
-    .split-hero__content{
-      max-width: 58ch;
-    }
+    .split-hero__content{ max-width: 58ch; }
 
     .kicker{
       margin:0 0 14px;
@@ -165,7 +155,6 @@
       gap: 12px;
       flex-wrap:wrap;
     }
-
     .btn{
       appearance:none;
       border: 1px solid rgba(255,255,255,.18);
@@ -182,30 +171,23 @@
       background: rgba(255,255,255,.10);
     }
 
-    /* bottom spacer (optional) */
-    .spacer2{
-      background: #0b0f0a;
-      border-bottom: 1px solid var(--rule);
-    }
-
-    /* =======================
-       Responsive
-       ======================= */
+    /* ====== Responsive like the video (stack) ====== */
     @media (max-width: 980px){
-      .split-hero{ min-height: 92vh; }
+      :root{ --split: 100%; }
+
+      .split-hero{ min-height: 96vh; }
 
       .split-hero__imageWrap{
         position: relative;
         width: 100%;
         height: 46vh;
       }
-
       .split-hero__divider{ display:none; }
 
       .split-hero__panel{
         margin-left: 0;
         min-height: auto;
-        padding: 28px var(--pad) 46px;
+        padding: 28px var(--pad) 48px;
       }
     }
   </style>
@@ -213,30 +195,28 @@
 
 <body>
 
-  <!-- OPTIONAL TOP TEXT (delete if you want) -->
-  <section class="spacer carrd-fullbleed">
-    <div class="spacer__inner">
-      <h2>Scroll down</h2>
-      <p>Este bloque es solo para que notes el efecto. Cuando llegas al split, el fondo se mueve mientras bajas.</p>
+  <!-- content above so the split feels like your video (you scroll into it) -->
+  <section class="section">
+    <div class="section__inner">
+      <h2>Intro section</h2>
+      <p>
+        Baja y mira el efecto: el fondo (izquierda) se mueve suave mientras el texto queda limpio en la barra (derecha).
+      </p>
     </div>
   </section>
 
-  <!-- THE SECTION YOU WANT (THIS IS THE ONE) -->
-  <section class="split-hero carrd-fullbleed" id="parallax">
+  <!-- the split parallax section -->
+  <section class="split-hero" id="parallax">
     <div class="split-hero__divider"></div>
 
-    <!-- Left: moving background -->
     <div class="split-hero__imageWrap" aria-hidden="true">
       <div class="split-hero__image" id="parallaxLayer"></div>
     </div>
 
-    <!-- Right: text bar -->
     <div class="split-hero__panel">
       <div class="split-hero__content">
         <p class="kicker">TIGRETTA SERVICES</p>
-
         <h1 class="title">No<br/>Recovery<br/>No Fee</h1>
-
         <p class="desc">
           Identificamos fondos no reclamados a nombre de tu negocio y manejamos el proceso completo con el Estado.
           Si no se recupera dinero, no pagas.
@@ -250,25 +230,27 @@
     </div>
   </section>
 
-  <!-- OPTIONAL BOTTOM TEXT (delete if you want) -->
-  <section class="spacer2 carrd-fullbleed">
-    <div class="spacer__inner">
-      <h2>More content</h2>
-      <p>Sección extra para que el parallax se sienta natural mientras sigues bajando.</p>
+  <!-- more content below so you can see it continue -->
+  <section class="section">
+    <div class="section__inner">
+      <h2>Next section</h2>
+      <p>
+        Esta parte es para que el parallax se sienta “real” porque sigues haciendo scroll después del bloque.
+      </p>
     </div>
   </section>
 
   <script>
-    // Parallax suave y estable (Carrd-friendly)
-    const hero = document.getElementById("parallax");
+    // Stronger, cleaner parallax: based on section progress
+    const hero  = document.getElementById("parallax");
     const layer = document.getElementById("parallaxLayer");
 
-    const intensity = 0.28; // 0.20–0.35
-    const maxShift = 70;    // px
+    // Tuning (video-like)
+    const maxShift = 90;     // px movement range
+    const ease = (t) => t*t*(3 - 2*t); // smoothstep
+    const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
 
     let ticking = false;
-
-    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
 
     function update(){
       ticking = false;
@@ -276,17 +258,15 @@
       const r = hero.getBoundingClientRect();
       const vh = window.innerHeight || document.documentElement.clientHeight;
 
-      // progreso de scroll en el bloque (0..1)
+      // progress 0..1 as the hero moves through viewport
       const progress = (vh - r.top) / (vh + r.height);
       const p = clamp(progress, 0, 1);
+      const e = ease(p);
 
-      // smoothstep
-      const eased = p * p * (3 - 2 * p);
+      // centered motion: -maxShift .. +maxShift
+      const shift = (e - 0.5) * 2 * maxShift;
 
-      // shift (centrado)
-      const shift = clamp((eased - 0.5) * 2 * maxShift * intensity, -maxShift, maxShift);
-
-      layer.style.setProperty("--parallaxY", `${shift}px`);
+      layer.style.setProperty("--parallaxY", `${shift.toFixed(2)}px`);
     }
 
     function onScroll(){
