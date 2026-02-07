@@ -156,6 +156,12 @@
       margin-top:34px;
       border-top:1px solid var(--line);
       border-bottom:1px solid var(--line);
+
+      /* FIX: contains ::before/::after so they don't ruin the page */
+      position:relative;
+      overflow:hidden;
+
+      /* keep your original dark look as a fallback */
       background:
         linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,.45)),
         radial-gradient(900px 400px at 20% 0%, rgba(255,255,255,.18), transparent 55%),
@@ -290,16 +296,6 @@
        - #fee shows RIGHT half of image
        ========================================================= */
 
-    /* Make the two target banners larger */
-   #process.banner::before{
-  background-image: url("process.png");
-  background-position: left center;
-}
-
-#fee.banner::before{
-  background-image: url("fee.png");
-  background-position: right center;
-}
     /* Parallax image layer (only for #process and #fee) */
     #process.banner::before,
     #fee.banner::before{
@@ -318,6 +314,16 @@
       pointer-events:none;
     }
 
+    /* Set each image + half */
+    #process.banner::before{
+      background-image: url("process.png");
+      background-position: left center;
+    }
+    #fee.banner::before{
+      background-image: url("fee.png");
+      background-position: right center;
+    }
+
     /* Dark overlay so text stays readable (only those two) */
     #process.banner::after,
     #fee.banner::after{
@@ -328,7 +334,7 @@
       pointer-events:none;
     }
 
-    /* Keep content above overlays for those two only */
+    /* Keep content above overlays for those two only + bigger */
     #process .banner-inner,
     #fee .banner-inner{
       position:relative;
@@ -340,12 +346,6 @@
     #fee .banner-inner h2{
       font-size: clamp(48px, 5vw, 76px);
     }
-
-    /* Left half for process */
-    #process.banner::before{ background-position: left center; }
-
-    /* Right half for fee */
-    #fee.banner::before{ background-position: right center; }
   </style>
 </head>
 
@@ -464,13 +464,7 @@
       </div>
     </section>
 
-    <div class="banner" id="fee"
-      style="
-        background:
-          linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,.45)),
-          radial-gradient(900px 420px at 80% 0%, rgba(255,255,255,.14), transparent 55%),
-          linear-gradient(120deg, #0b0b0f, #111827);
-      ">
+    <div class="banner" id="fee">
       <div class="wrap banner-inner">
         <div>
           <h2>No Recovery — No Fee</h2>
@@ -522,53 +516,44 @@
   </footer>
 
   <script>
-  document.getElementById("y").textContent = new Date().getFullYear();
+    document.getElementById("y").textContent = new Date().getFullYear();
 
-  // =========================================================
-  // ONLY CHANGES REQUESTED:
-  // Parallax background movement ONLY for #process and #fee banners
-  // =========================================================
-  const targets = [
-    document.getElementById('process'),
-    document.getElementById('fee')
-  ].filter(Boolean);
+    // Parallax ONLY for #process and #fee banners
+    const targets = [
+      document.getElementById('process'),
+      document.getElementById('fee')
+    ].filter(Boolean);
 
-  const maxShift = 120; // px
+    const maxShift = 120; // px
+    const clamp = (n,min,max)=>Math.max(min,Math.min(max,n));
+    const ease = t => t*t*(3-2*t); // smoothstep
+    let ticking = false;
 
-  const clamp = (n,min,max)=>Math.max(min,Math.min(max,n));
-  const ease = t => t*t*(3-2*t); // smoothstep
+    function updateParallax(){
+      ticking = false;
+      const vh = window.innerHeight || document.documentElement.clientHeight;
 
-  let ticking = false;
-
-  function updateParallax(){
-    ticking = false;
-    const vh = window.innerHeight || document.documentElement.clientHeight;
-
-    targets.forEach(el=>{
-      const r = el.getBoundingClientRect();
-
-      // 0..1 while element crosses viewport
-      const progress = (vh - r.top) / (vh + r.height);
-      const p = clamp(progress, 0, 1);
-      const e = ease(p);
-
-      // centered shift
-      const shift = (e - 0.5) * 2 * maxShift;
-
-      el.style.setProperty('--parallaxY', `${shift.toFixed(2)}px`);
-    });
-  }
-
-  function onScroll(){
-    if(!ticking){
-      ticking = true;
-      requestAnimationFrame(updateParallax);
+      targets.forEach(el=>{
+        const r = el.getBoundingClientRect();
+        const progress = (vh - r.top) / (vh + r.height);
+        const p = clamp(progress, 0, 1);
+        const e = ease(p);
+        const shift = (e - 0.5) * 2 * maxShift;
+        el.style.setProperty('--parallaxY', `${shift.toFixed(2)}px`);
+      });
     }
-  }
 
-  window.addEventListener('scroll', onScroll, { passive:true });
-  window.addEventListener('resize', onScroll);
-  updateParallax();
-</script>
+    function onScroll(){
+      if(!ticking){
+        ticking = true;
+        requestAnimationFrame(updateParallax);
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive:true });
+    window.addEventListener('resize', onScroll);
+    updateParallax();
+  </script>
 </body>
 </html>
+
