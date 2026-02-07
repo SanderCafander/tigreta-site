@@ -291,14 +291,15 @@
        ========================================================= */
 
     /* Make the two target banners larger */
-    #process.banner,
-    #fee.banner{
-      position:relative;
-      overflow:hidden;
-      min-height: 62vh;
-      margin-top:34px; /* keep same */
-    }
+   #process.banner::before{
+  background-image: url("process.jpg");
+  background-position: left center;
+}
 
+#fee.banner::before{
+  background-image: url("fee.jpg");
+  background-position: right center;
+}
     /* Parallax image layer (only for #process and #fee) */
     #process.banner::before,
     #fee.banner::before{
