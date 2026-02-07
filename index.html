@@ -522,50 +522,53 @@
   </footer>
 
   <script>
-    document.getElementById("y").textContent = new Date().getFullYear();
+  document.getElementById("y").textContent = new Date().getFullYear();
 
-    // =========================================================
-    // ONLY CHANGES REQUESTED:
-    // Parallax background movement ONLY for #process and #fee banners
-    // =========================================================
-    const targets = [document.getElementById('process'), document.getElementById('fee')].filter(Boolean);
-    const maxShift = 120; // px
+  // =========================================================
+  // ONLY CHANGES REQUESTED:
+  // Parallax background movement ONLY for #process and #fee banners
+  // =========================================================
+  const targets = [
+    document.getElementById('process'),
+    document.getElementById('fee')
+  ].filter(Boolean);
 
-    const clamp = (n,min,max)=>Math.max(min,Math.min(max,n));
-    const ease = t => t*t*(3-2*t); // smoothstep
+  const maxShift = 120; // px
 
-    let ticking = false;
+  const clamp = (n,min,max)=>Math.max(min,Math.min(max,n));
+  const ease = t => t*t*(3-2*t); // smoothstep
 
-    function updateParallax(){
-      ticking = false;
-      const vh = window.innerHeight || document.documentElement.clientHeight;
+  let ticking = false;
 
-      targets.forEach(el=>{
-        const r = el.getBoundingClientRect();
+  function updateParallax(){
+    ticking = false;
+    const vh = window.innerHeight || document.documentElement.clientHeight;
 
-        // 0..1 while element crosses viewport
-        const progress = (vh - r.top) / (vh + r.height);
-        const p = clamp(progress, 0, 1);
-        const e = ease(p);
+    targets.forEach(el=>{
+      const r = el.getBoundingClientRect();
 
-        // centered shift
-        const shift = (e - 0.5) * 2 * maxShift;
+      // 0..1 while element crosses viewport
+      const progress = (vh - r.top) / (vh + r.height);
+      const p = clamp(progress, 0, 1);
+      const e = ease(p);
 
-        el.style.setProperty('--parallaxY', `${shift.toFixed(2)}px`);
-      });
+      // centered shift
+      const shift = (e - 0.5) * 2 * maxShift;
+
+      el.style.setProperty('--parallaxY', `${shift.toFixed(2)}px`);
+    });
+  }
+
+  function onScroll(){
+    if(!ticking){
+      ticking = true;
+      requestAnimationFrame(updateParallax);
     }
+  }
 
-    function onScroll(){
-      if(!ticking){
-        ticking = true;
-        requestAnimationFrame(updateParallax);
-      }
-    }
-
-    window.addEventListener('scroll', onScroll, { passive:true });
-    window.addEventListener('resize', onScroll);
-    updateParallax();
-  </script>
+  window.addEventListener('scroll', onScroll, { passive:true });
+  window.addEventListener('resize', onScroll);
+  updateParallax();
+</script>
 </body>
 </html>
-
