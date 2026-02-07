@@ -281,6 +281,71 @@
       nav{display:none;}
       .banner-inner{flex-direction:column; align-items:flex-start;}
     }
+
+    /* =========================================================
+       ONLY CHANGES REQUESTED:
+       - Make #process and #fee banners bigger
+       - Add background image parallax ONLY for those banners
+       - #process shows LEFT half of image
+       - #fee shows RIGHT half of image
+       ========================================================= */
+
+    /* Make the two target banners larger */
+    #process.banner,
+    #fee.banner{
+      position:relative;
+      overflow:hidden;
+      min-height: 62vh;
+      margin-top:34px; /* keep same */
+    }
+
+    /* Parallax image layer (only for #process and #fee) */
+    #process.banner::before,
+    #fee.banner::before{
+      content:"";
+      position:absolute;
+      top:-12%;
+      bottom:-12%;
+      left:-8%;
+      right:-8%;
+      background-image: url("bg.png");
+      background-size: cover;
+      background-repeat:no-repeat;
+      filter: grayscale(1) contrast(1.10) brightness(.95);
+      transform: translate3d(0, var(--parallaxY, 0px), 0) scale(1.08);
+      will-change: transform;
+      z-index:0;
+      pointer-events:none;
+    }
+
+    /* Dark overlay so text stays readable (only those two) */
+    #process.banner::after,
+    #fee.banner::after{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(0deg, rgba(0,0,0,.55), rgba(0,0,0,.55));
+      z-index:1;
+      pointer-events:none;
+    }
+
+    /* Keep content above overlays for those two only */
+    #process .banner-inner,
+    #fee .banner-inner{
+      position:relative;
+      z-index:2;
+      padding: 88px 0; /* bigger */
+    }
+
+    #process .banner-inner h2,
+    #fee .banner-inner h2{
+      font-size: clamp(48px, 5vw, 76px);
+    }
+
+    /* Left half for process */
+    #process.banner::before{ background-position: left center; }
+
+    /* Right half for fee */
+    #fee.banner::before{ background-position: right center; }
   </style>
 </head>
 
@@ -458,6 +523,49 @@
 
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
+
+    // =========================================================
+    // ONLY CHANGES REQUESTED:
+    // Parallax background movement ONLY for #process and #fee banners
+    // =========================================================
+    const targets = [document.getElementById('process'), document.getElementById('fee')].filter(Boolean);
+    const maxShift = 120; // px
+
+    const clamp = (n,min,max)=>Math.max(min,Math.min(max,n));
+    const ease = t => t*t*(3-2*t); // smoothstep
+
+    let ticking = false;
+
+    function updateParallax(){
+      ticking = false;
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+
+      targets.forEach(el=>{
+        const r = el.getBoundingClientRect();
+
+        // 0..1 while element crosses viewport
+        const progress = (vh - r.top) / (vh + r.height);
+        const p = clamp(progress, 0, 1);
+        const e = ease(p);
+
+        // centered shift
+        const shift = (e - 0.5) * 2 * maxShift;
+
+        el.style.setProperty('--parallaxY', `${shift.toFixed(2)}px`);
+      });
+    }
+
+    function onScroll(){
+      if(!ticking){
+        ticking = true;
+        requestAnimationFrame(updateParallax);
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive:true });
+    window.addEventListener('resize', onScroll);
+    updateParallax();
   </script>
 </body>
 </html>
+
