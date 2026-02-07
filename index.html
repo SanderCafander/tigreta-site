@@ -19,7 +19,7 @@
       --p: clamp(15px, 1.2vw, 18px);
       --leading: 1.55;
 
-      --split: 52%;
+      --left: 52%;
     }
 
     *{ box-sizing:border-box; }
@@ -29,9 +29,10 @@
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       background: var(--bg);
       color: var(--ink);
+      overflow-x: hidden; /* IMPORTANT: no horizontal weirdness */
     }
 
-    /* ====== Sections (so you can scroll like the example video) ====== */
+    /* ====== normal content sections ====== */
     .section{
       border-bottom: 1px solid var(--rule);
       background: var(--bg);
@@ -56,28 +57,27 @@
       color: var(--muted);
     }
 
-    /* ====== SPLIT HERO ====== */
+    /* ====== SPLIT HERO (GRID) ====== */
     .split-hero{
-      position: relative;
       min-height: 92vh;
-      overflow: hidden;
+      width: 100%;
       background: #000;
       border-bottom: 1px solid var(--rule);
+
+      display: grid;
+      grid-template-columns: var(--left) 1fr;
     }
 
-    /* Left: image area */
-    .split-hero__imageWrap{
-      position:absolute;
-      inset:0;
-      width: var(--split);
-      overflow:hidden;
+    .split-hero__left{
+      position: relative;
+      overflow: hidden;
+      min-height: 92vh;
     }
 
-    /* The moving image layer (FIXED CALIBRATION) */
     .split-hero__image{
       position:absolute;
 
-      /* FIX: no more huge inset. This makes movement visible and “cinematic”. */
+      /* calibrated so it moves and doesn’t look washed */
       top:-8%;
       bottom:-8%;
       left:-6%;
@@ -86,16 +86,12 @@
       background-image: url("bg.png");
       background-size: cover;
       background-position: center;
-
-      /* keep it crisp but cinematic */
       filter: grayscale(1) contrast(1.08) brightness(1.02);
 
-      /* FIX: lower scale so the parallax is noticeable */
       transform: translate3d(0, var(--parallaxY, 0px), 0) scale(1.06);
       will-change: transform;
     }
 
-    /* overlay gradient like your reference */
     .split-hero__image::after{
       content:"";
       position:absolute; inset:0;
@@ -103,32 +99,26 @@
       pointer-events:none;
     }
 
-    /* divider line */
-    .split-hero__divider{
-      position:absolute;
-      left: var(--split);
-      top:0; bottom:0;
-      width: 1px;
-      background: var(--rule);
-      transform: translateX(-50%);
-      pointer-events:none;
-      z-index: 5;
-    }
-
-    /* Right: text bar */
-    .split-hero__panel{
+    .split-hero__right{
       position: relative;
-      margin-left: var(--split);
       min-height: 92vh;
-
       display:flex;
       align-items:center;
 
       background: var(--panel);
       backdrop-filter: blur(12px);
-
       padding: clamp(28px, 5vw, 78px) var(--pad);
-      z-index: 6;
+    }
+
+    /* divider line exactly between columns */
+    .split-hero__right::before{
+      content:"";
+      position:absolute;
+      left:0; top:0; bottom:0;
+      width:1px;
+      background: var(--rule);
+      transform: translateX(-0.5px);
+      pointer-events:none;
     }
 
     .split-hero__content{ max-width: 58ch; }
@@ -163,6 +153,7 @@
       gap: 12px;
       flex-wrap:wrap;
     }
+
     .btn{
       appearance:none;
       border: 1px solid rgba(255,255,255,.18);
@@ -179,26 +170,20 @@
       background: rgba(255,255,255,.10);
     }
 
-    /* Responsive */
+    /* ====== Mobile stack ====== */
     @media (max-width: 980px){
-      :root{ --split: 100%; }
-
-      .split-hero{ min-height: 96vh; }
-
-      .split-hero__imageWrap{
-        position: relative;
-        width: 100%;
-        height: 46vh;
+      .split-hero{
+        grid-template-columns: 1fr;
       }
-      .split-hero__divider{ display:none; }
-
-      .split-hero__panel{
-        margin-left: 0;
+      .split-hero__left{
+        min-height: 46vh;
+      }
+      .split-hero__right{
         min-height: auto;
         padding: 28px var(--pad) 48px;
       }
+      .split-hero__right::before{ display:none; }
 
-      /* keep image movement safe on mobile */
       .split-hero__image{
         top:-10%;
         bottom:-10%;
@@ -215,18 +200,16 @@
   <section class="section">
     <div class="section__inner">
       <h2>Intro section</h2>
-      <p>Baja. Cuando entres al bloque, el fondo (izquierda) se mueve suave mientras el texto queda fijo (derecha).</p>
+      <p>Baja y mira: la izquierda se mueve con parallax mientras la barra derecha queda limpia.</p>
     </div>
   </section>
 
   <section class="split-hero" id="parallax">
-    <div class="split-hero__divider"></div>
-
-    <div class="split-hero__imageWrap" aria-hidden="true">
+    <div class="split-hero__left" aria-hidden="true">
       <div class="split-hero__image" id="parallaxLayer"></div>
     </div>
 
-    <div class="split-hero__panel">
+    <div class="split-hero__right">
       <div class="split-hero__content">
         <p class="kicker">TIGRETTA SERVICES</p>
 
@@ -248,35 +231,30 @@
   <section class="section">
     <div class="section__inner">
       <h2>Next section</h2>
-      <p>Contenido extra para que el parallax se sienta natural, igual que en el ejemplo.</p>
+      <p>Contenido debajo para que el parallax se sienta natural mientras sigues bajando.</p>
     </div>
   </section>
 
   <script>
-    // Parallax “video-like”: noticeable but not crazy.
     const hero  = document.getElementById("parallax");
     const layer = document.getElementById("parallaxLayer");
 
-    const maxShift = 110; // px (sube/baja más si quieres más efecto)
-    const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
-    const ease = (t) => t*t*(3 - 2*t); // smoothstep
+    const maxShift = 110; // ajusta si quieres más/menos
+    const clamp = (n,a,b) => Math.max(a, Math.min(b,n));
+    const ease  = (t) => t*t*(3 - 2*t);
 
     let ticking = false;
 
     function update(){
       ticking = false;
-
-      const r = hero.getBoundingClientRect();
+      const r  = hero.getBoundingClientRect();
       const vh = window.innerHeight || document.documentElement.clientHeight;
 
-      // progress 0..1 through the viewport
       const progress = (vh - r.top) / (vh + r.height);
       const p = clamp(progress, 0, 1);
       const e = ease(p);
 
-      // centered motion: -maxShift .. +maxShift
       const shift = (e - 0.5) * 2 * maxShift;
-
       layer.style.setProperty("--parallaxY", `${shift.toFixed(2)}px`);
     }
 
